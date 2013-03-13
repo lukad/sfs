@@ -12,7 +12,7 @@ var (
 	flagDigest   = flag.BoolP("digest", "d", false, "Use digest access authentication")
 	flagUser     = flag.StringP("user", "u", "", "Username for authentication")
 	flagPassword = flag.StringP("password", "p", "", "Password for authentication")
-	flagRoot     = flag.StringP("root", "r", "./", "Root Directory for the file server")
+	flagRoot     = flag.StringP("root", "r", "./", "Root directory for the file server")
 )
 
 func makeBasicAuthHandleFunc(handler http.Handler) http.HandlerFunc {
