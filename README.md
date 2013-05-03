@@ -8,7 +8,8 @@ Simple File Server
 ## Usage
 	
 	$ sfs --help
-	Usage of sfs:
+	Usage: sfs [options]
+	Where options are:
 	  -d, --digest=false: Use http digest authentication
 	  -l, --listen=":8080": Listen address
 	  -p, --password="": Password for basic auth
