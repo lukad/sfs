@@ -44,6 +44,13 @@ func makeBasicAuthHandleFunc(handler http.Handler) http.HandlerFunc {
 	}
 }
 
+func init() {
+	flag.Usage = func() {
+		fmt.Println("Usage: sfs [options]\nWhere options are:")
+		flag.PrintDefaults()
+	}
+}
+
 func main() {
 	flag.Parse()
 	fileServer := http.FileServer(http.Dir(*flagRoot))
