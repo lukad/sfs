@@ -22,6 +22,7 @@ import (
 	auth "bitbucket.org/taruti/http_auth"
 	"fmt"
 	flag "github.com/ogier/pflag"
+	"github.com/wsxiaoys/terminal/color"
 	"log"
 	"net/http"
 )
@@ -33,13 +34,18 @@ var (
 	flagPassword = flag.StringP("password", "p", "", "Password for authentication")
 	flagRoot     = flag.StringP("root", "r", "./", "Root directory for the file server")
 	flagLog      = flag.BoolP("log", "", false, "Log to stdout")
+	flagNoColor  = flag.BoolP("no-color", "n", false, "Don't log with colors")
 )
 
 func Log(handler http.Handler) http.Handler {
+	logFormat := "@{y}%s @{m}%s @{|}%s"
+	if *flagNoColor {
+		logFormat = "%s %s %s"
+	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		handler.ServeHTTP(w, r)
-		log.Printf("%s %s %s", r.Method, r.URL, r.RemoteAddr)
+		log.Print(color.Sprintf(logFormat, r.Method, r.URL, r.RemoteAddr))
 	})
 }
 
