@@ -22,6 +22,7 @@ import (
 	auth "bitbucket.org/taruti/http_auth"
 	"fmt"
 	flag "github.com/ogier/pflag"
+	"log"
 	"net/http"
 )
 
@@ -31,17 +32,26 @@ var (
 	flagUser     = flag.StringP("user", "u", "", "Username for authentication")
 	flagPassword = flag.StringP("password", "p", "", "Password for authentication")
 	flagRoot     = flag.StringP("root", "r", "./", "Root directory for the file server")
+	flagLog      = flag.BoolP("log", "", false, "Log to stdout")
 )
 
-func makeBasicAuthHandleFunc(handler http.Handler) http.HandlerFunc {
+func Log(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		handler.ServeHTTP(w, r)
+		log.Printf("%s %s %s", r.Method, r.URL, r.RemoteAddr)
+	})
+}
+
+func makeBasicAuthHandleFunc(handler http.Handler) http.Handler {
 	digestServer := auth.NewDigest("realm", func(user, realm string) string {
 		return auth.CalculateHA1(user, realm, *flagPassword)
 	})
-	return func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if digestServer.Auth(w, r) {
 			handler.ServeHTTP(w, r)
 		}
-	}
+	})
 }
 
 func init() {
@@ -54,10 +64,16 @@ func init() {
 func main() {
 	flag.Parse()
 	fileServer := http.FileServer(http.Dir(*flagRoot))
+	var handler http.Handler
 	if *flagDigest {
-		http.HandleFunc("/", makeBasicAuthHandleFunc(fileServer))
+		handler = makeBasicAuthHandleFunc(fileServer)
 	} else {
-		http.Handle("/", fileServer)
+		handler = fileServer
+	}
+	if *flagLog {
+		http.Handle("/", Log(handler))
+	} else {
+		http.Handle("/", handler)
 	}
 	if err := http.ListenAndServe(*flagAddress, nil); err != nil {
 		fmt.Println(err)
