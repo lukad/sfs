@@ -10,11 +10,13 @@ Simple File Server
 	$ sfs --help
 	Usage: sfs [options]
 	Where options are:
-	  -d, --digest=false: Use http digest authentication
+	  -d, --digest=false: Use digest access authentication
 	  -l, --listen=":8080": Listen address
-	  -p, --password="": Password for basic auth
-	  -r, --root="./": Root Directory for the file server
-	  -u, --user="": Username for basic auth
+	  --log=false: Log to stdout
+	  -n, --no-color=false: Don't log with colors
+	  -p, --password="": Password for authentication
+	  -r, --root="./": Root directory for the file server
+	  -u, --user="": Username for authentication
 
 	$ sfs -d -ufoo -pbar -r/home/foo/baz/
 
