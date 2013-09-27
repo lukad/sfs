@@ -25,6 +25,7 @@ import (
 	"github.com/wsxiaoys/terminal/color"
 	"log"
 	"net/http"
+	"net/url"
 )
 
 var (
@@ -38,14 +39,20 @@ var (
 )
 
 func Log(handler http.Handler) http.Handler {
-	logFormat := "@{y}%s @{m}%s @{|}%s"
+	var logf func(string, *url.URL, string)
 	if *flagNoColor {
-		logFormat = "%s %s %s"
+		logf = func(method string, u *url.URL, address string) {
+			log.Printf("%s %s %s", method, u, address)
+		}
+	} else {
+		logf = func(method string, u *url.URL, address string) {
+			logFormat := "@{y}%s @{m}%s @{|}%s"
+			log.Print(color.Sprintf(logFormat, method, u, address))
+		}
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+		logf(r.Method, r.URL, r.RemoteAddr)
 		handler.ServeHTTP(w, r)
-		log.Print(color.Sprintf(logFormat, r.Method, r.URL, r.RemoteAddr))
 	})
 }
 
