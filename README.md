@@ -12,7 +12,7 @@ Simple File Server
 	Where options are:
 	  -d, --digest=false: Use digest access authentication
 	  -l, --listen=":8080": Listen address
-	  --log=false: Log to stdout
+	  --log=true: Log to stdout
 	  -n, --no-color=false: Don't log with colors
 	  -p, --password="": Password for authentication
 	  -r, --root="./": Root directory for the file server

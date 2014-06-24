@@ -1,6 +1,6 @@
 /*
 sfs - A simple http file server with digest access authentication support
-Copyright (C) 2013  Luka Dornhecker
+Copyright (C) 2013,2014  Luka Dornhecker
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ var (
 	flagUser     = flag.StringP("user", "u", "", "Username for authentication")
 	flagPassword = flag.StringP("password", "p", "", "Password for authentication")
 	flagRoot     = flag.StringP("root", "r", "./", "Root directory for the file server")
-	flagLog      = flag.BoolP("log", "", false, "Log to stdout")
+	flagLog      = flag.BoolP("log", "", true, "Log to stdout")
 	flagNoColor  = flag.BoolP("no-color", "n", false, "Don't log with colors")
 )
 
